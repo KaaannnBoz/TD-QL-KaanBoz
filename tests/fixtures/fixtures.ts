@@ -66,8 +66,6 @@ const test = base.extend<Fixtures>({
     }: { checkoutStartPage: Page; checkoutPage: CheckoutPage },
     use,
   ) => {
-    // Contexte pour les tests de paiement : déjà au checkout, infos de livraison remplies,
-    // et utilisateur sur l'onglet Paiement.
     await checkoutPage.fillShippingInformation();
     await checkoutPage.goToPaymentTab();
 
@@ -78,7 +76,6 @@ const test = base.extend<Fixtures>({
     { page, productsPage }: { page: Page; productsPage: ProductsPage },
     use,
   ) => {
-    // Contexte pour les tests d'ajout au panier : sur la page détail d'un produit.
     await productsPage.goto();
     await page.getByTestId("product-card-1").click();
 

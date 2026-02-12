@@ -1,4 +1,5 @@
 import { Page, Locator } from "@playwright/test";
+import { faker } from "@faker-js/faker";
 
 export class CheckoutPage {
   readonly page: Page;
@@ -72,10 +73,20 @@ export class CheckoutPage {
   }
 
   async confirmPayment(): Promise<void> {
-    await this.paymentCardNumberInput.fill("4242424242424242");
-    await this.paymentCardNameInput.fill("John Doe");
-    await this.paymentExpiryInput.fill("12/30");
-    await this.paymentCvvInput.fill("123");
+    const cardNumber = faker.finance.creditCardNumber();
+    const cardHolder = faker.person.fullName();
+    const month = String(faker.number.int({ min: 1, max: 12 })).padStart(
+      2,
+      "0",
+    );
+    const year = String(new Date().getFullYear() + 3).slice(-2);
+    const expiry = `${month}/${year}`;
+    const cvv = faker.string.numeric(3);
+
+    await this.paymentCardNumberInput.fill(cardNumber);
+    await this.paymentCardNameInput.fill(cardHolder);
+    await this.paymentExpiryInput.fill(expiry);
+    await this.paymentCvvInput.fill(cvv);
     await this.paymentSubmitButton.click();
   }
 
@@ -84,26 +95,21 @@ export class CheckoutPage {
   }
 
   async fillShippingInformation(): Promise<void> {
-    await this.shippingFirstnameInput.click();
-    await this.shippingFirstnameInput.fill("Test");
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const email = faker.internet.email();
+    const phone = faker.phone.number();
+    const address = faker.location.streetAddress();
+    const city = faker.location.city();
+    const postalCode = faker.location.zipCode();
 
-    await this.shippingLastnameInput.click();
-    await this.shippingLastnameInput.fill("Boz");
-
-    await this.shippingEmailInput.click();
-    await this.shippingEmailInput.fill("test01@gmail.com");
-
-    await this.shippingPhoneInput.click();
-    await this.shippingPhoneInput.fill("0783180797");
-
-    await this.shippingAddressInput.click();
-    await this.shippingAddressInput.fill("test");
-
-    await this.shippingCityInput.click();
-    await this.shippingCityInput.fill("Paris");
-
-    await this.shippingPostalCodeInput.click();
-    await this.shippingPostalCodeInput.fill("59100");
+    await this.shippingFirstnameInput.fill(firstName);
+    await this.shippingLastnameInput.fill(lastName);
+    await this.shippingEmailInput.fill(email);
+    await this.shippingPhoneInput.fill(phone);
+    await this.shippingAddressInput.fill(address);
+    await this.shippingCityInput.fill(city);
+    await this.shippingPostalCodeInput.fill(postalCode);
 
     await this.shippingSubmitButton.click();
   }
